@@ -7,7 +7,7 @@ from poktroll_clients import (
 
 def test_depinject_supply():
     client = EventsQueryClient("ws://127.0.0.1:26657/websocket")
-    cfg_ref = Supply(client.go_ref)
+    deps_ref = Supply(client.go_ref)
 
 
 def test_depinject_supply_many():

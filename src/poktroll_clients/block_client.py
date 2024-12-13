@@ -10,13 +10,13 @@ class BlockClient(GoManagedMem):
     go_ref: go_ref
     err_ptr: ffi.CData
 
-    def __init__(self, cfg_ref: go_ref):
+    def __init__(self, deps_ref: go_ref):
         """
         Constructor for BlockClient.
-        :param cfg_ref: A Go-managed memory reference to a depinject config.
+        :param deps_ref: A Go-managed memory reference to a depinject config.
         """
 
-        go_ref = libpoktroll_clients.NewBlockClient(cfg_ref, self.err_ptr)
+        go_ref = libpoktroll_clients.NewBlockClient(deps_ref, self.err_ptr)
         super().__init__(go_ref)
 
 

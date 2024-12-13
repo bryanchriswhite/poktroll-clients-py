@@ -145,10 +145,10 @@ async def main():
     # build tx_client_deps_ref... see dependency construction example above.
 
     # Gateway 2 tx client (gateway2 SHOULD NOT be staked)
-    gw_tx_client = TxClient(tx_client_deps_ref, "gateway2")
+    gw_tx_client = TxClient("gateway2", tx_client_deps_ref)
 
     # Application 3 tx client (app3 SHOULD NOT be staked)
-    app_tx_client = TxClient(tx_client_deps_ref, "app3")
+    app_tx_client = TxClient("app3", tx_client_deps_ref)
 
     # Stake localnet gateway 2
     await gw_tx_client.sign_and_broadcast(

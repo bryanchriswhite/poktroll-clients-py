@@ -86,9 +86,9 @@ ffi.cdef("""
 
     go_ref NewTxContext(char *tcp_url, char **err);
 
-    go_ref NewBlockClient(go_ref cfg_ref, char **err);
+    go_ref NewBlockClient(go_ref deps_ref, char **err);
 
-    go_ref NewTxClient(go_ref cfg_ref, char *signing_key_name, char **err);
+    go_ref NewTxClient(go_ref deps_ref, char *signing_key_name, char **err);
     go_ref TxClient_SignAndBroadcast(AsyncOperation* op, go_ref self_ref, serialized_proto *msg);
     go_ref TxClient_SignAndBroadcastMany(AsyncOperation* op, go_ref self_ref, proto_message_array *msgs);
 """)

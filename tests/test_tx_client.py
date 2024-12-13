@@ -22,14 +22,14 @@ def test_tx_context():
 
 
 def test_tx_client():
-    cfg_ref = get_tx_client_deps()
-    tx_client = TxClient(cfg_ref, "faucet")
+    deps_ref = get_tx_client_deps()
+    tx_client = TxClient("faucet", deps_ref)
 
 
 @pytest.mark.asyncio
 async def test_sign_and_broadcast_success():
-    cfg_ref = get_tx_client_deps()
-    tx_client = TxClient(cfg_ref, "pnf")
+    deps_ref = get_tx_client_deps()
+    tx_client = TxClient("pnf", deps_ref)
 
     send_msg_from_pnf_to_app3 = MsgSend(
         from_address="pokt1eeeksh2tvkh7wzmfrljnhw4wrhs55lcuvmekkw",
@@ -45,9 +45,9 @@ async def test_sign_and_broadcast_success():
 
 @pytest.mark.asyncio
 async def test_sign_and_broadcast_many_success():
-    cfg_ref = get_tx_client_deps()
-    app3_tx_client = TxClient(cfg_ref, "app3")
-    gateway2_tx_client = TxClient(cfg_ref, "gateway2")
+    deps_ref = get_tx_client_deps()
+    app3_tx_client = TxClient("app3", deps_ref)
+    gateway2_tx_client = TxClient("gateway2", deps_ref)
 
     app3_addr = "pokt1lqyu4v88vp8tzc86eaqr4lq8rwhssyn6rfwzex"
     gateway2_addr = "pokt15w3fhfyc0lttv7r585e2ncpf6t2kl9uh8rsnyz"
@@ -90,8 +90,8 @@ async def test_sign_and_broadcast_many_success():
 
 @pytest.mark.asyncio
 async def test_sign_and_broadcast_error():
-    cfg_ref = get_tx_client_deps()
-    tx_client = TxClient(cfg_ref, "app1")
+    deps_ref = get_tx_client_deps()
+    tx_client = TxClient("app1", deps_ref)
 
     # Attempt to stake an already-staked address (app1)
     stake_app1_msg = MsgStakeApplication(
@@ -109,8 +109,8 @@ def get_tx_client_deps() -> go_ref:
     events_query_client = EventsQueryClient("ws://127.0.0.1:26657/websocket")
     block_query_client = BlockQueryClient("http://127.0.0.1:26657")
 
-    cfg_ref = SupplyMany(events_query_client, block_query_client)
-    block_client = BlockClient(cfg_ref)
+    deps_ref = SupplyMany(events_query_client, block_query_client)
+    block_client = BlockClient(deps_ref)
 
     tx_ctx = TxContext("tcp://127.0.0.1:26657")
 

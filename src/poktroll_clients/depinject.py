@@ -10,12 +10,12 @@ def Supply(go_ref: go_ref) -> go_ref:
     """
 
     err_ptr = ffi.new("char **")
-    cfg_ref = libpoktroll_clients.Supply(go_ref, err_ptr)
+    deps_ref = libpoktroll_clients.Supply(go_ref, err_ptr)
 
     check_err(err_ptr)
-    check_ref(cfg_ref)
+    check_ref(deps_ref)
 
-    return cfg_ref
+    return deps_ref
 
 
 def SupplyMany(*go_objs: GoManagedMem) -> go_ref:
@@ -29,9 +29,9 @@ def SupplyMany(*go_objs: GoManagedMem) -> go_ref:
     cgo_refs = ffi.new("go_ref[]", go_refs)
     err_ptr = ffi.new("char **")
 
-    cfg_ref = libpoktroll_clients.SupplyMany(cgo_refs, len(go_objs), err_ptr)
+    deps_ref = libpoktroll_clients.SupplyMany(cgo_refs, len(go_objs), err_ptr)
 
     check_err(err_ptr)
-    check_ref(cfg_ref)
+    check_ref(deps_ref)
 
-    return cfg_ref
+    return deps_ref

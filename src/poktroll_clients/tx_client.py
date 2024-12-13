@@ -1,11 +1,16 @@
 import asyncio
 from typing import Dict, Tuple
+from urllib.parse import urlparse
 
 from atomics import INTEGRAL, atomic, INT
 from google.protobuf.message import Message
 
 from cffi import FFIError
 
+from poktroll_clients.events_query_client import EventsQueryClient
+from poktroll_clients.block_client import BlockClient, BlockQueryClient
+from poktroll_clients.depinject import SupplyMany
+from poktroll_clients.tx_context import TxContext
 from poktroll_clients.ffi import ffi, libpoktroll_clients
 from poktroll_clients.go_memory import GoManagedMem, go_ref, check_err, check_ref
 from poktroll_clients.protobuf import SerializedProto, ProtoMessageArray
@@ -21,12 +26,21 @@ class TxClient(GoManagedMem):
     _callback_idx: INTEGRAL = atomic(width=8, atype=INT)
     _callback_fns: Dict[int, Tuple[ffi.CData, ffi.CData, ffi.CData]] = {}
 
-    def __init__(self, cfg_ref: go_ref, signing_key_name: str):
+    def __init__(self,
+                 signing_key_name: str,
+                 deps_ref: go_ref = -1,
+                 query_node_rpc_url: str = "",
+                 tx_node_rpc_url: str = ""):
         """
         Constructor for TxClient.
-        :param cfg_ref: A Go-managed memory reference to a depinject config.
+
+        If deps_ref is not provided, a depinject config will be created using the provided query_node_rpc_url
+        and tx_node_rpc_url. If, then, either of these are not provided, a ValueError will be raised.
         """
-        go_ref = libpoktroll_clients.NewTxClient(cfg_ref, signing_key_name.encode('utf-8'), self.err_ptr)
+        if deps_ref == -1:
+            deps_ref = _new_tx_client_depinject_config(query_node_rpc_url, tx_node_rpc_url)
+
+        go_ref = libpoktroll_clients.NewTxClient(deps_ref, signing_key_name.encode('utf-8'), self.err_ptr)
         super().__init__(go_ref)
 
         check_err(self.err_ptr)
@@ -119,19 +133,32 @@ class TxClient(GoManagedMem):
         self._callback_fns.pop(callback_idx)
 
 
-class TxContext(GoManagedMem):
+def _new_tx_client_depinject_config(
+        query_node_rpc_url: str,
+        tx_node_rpc_url: str
+) -> go_ref:
     """
     TODO_IN_THIS_COMMIT: comment
     """
 
-    go_ref: go_ref
-    err_ptr: ffi.CData
+    # TODO_IN_THIS_COMMIT: add more detail to the error messages,
+    # explaining the expected format, with an example.
+    if not query_node_rpc_url:
+        raise ValueError("query_node_rpc_url must be specified")
 
-    def __init__(self, tx_node_rpc_url: str):
-        """
-        Constructor for TxContext.
-        :param tx_node_rpc_url: The gRPC URL for the client to use (e.g. tcp://127.0.0.1:26657).
-        """
+    if not tx_node_rpc_url:
+        raise ValueError("tx_node_rpc_url must be specified")
 
-        go_ref = libpoktroll_clients.NewTxContext(tx_node_rpc_url.encode('utf-8'), self.err_ptr)
-        super().__init__(go_ref)
+    query_node_ws_url = urlparse(query_node_rpc_url)
+    query_node_ws_url.scheme = "ws"
+    query_node_ws_url.path = "websocket"
+
+    events_query_client = EventsQueryClient(query_node_ws_url.geturl())
+    block_query_client = BlockQueryClient(query_node_rpc_url)
+
+    deps_ref = SupplyMany(events_query_client, block_query_client)
+    block_client = BlockClient(deps_ref)
+
+    tx_ctx = TxContext(tx_node_rpc_url)
+
+    return SupplyMany(events_query_client, block_client, tx_ctx)
