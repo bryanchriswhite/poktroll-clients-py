@@ -34,15 +34,15 @@ class GoManagedMem:
     go_ref: go_ref
     err_ptr: ffi.CData = ffi.new("char **")
 
-    def __init__(self, go_ref: go_ref):
+    def __init__(self, self_ref: go_ref):
         """
         Constructor for GoManagedMem. Stores the Go-managed memory reference.
         """
 
-        self.go_ref = go_ref
+        self.go_ref = self_ref
 
         check_err(self.err_ptr)
-        check_ref(go_ref)
+        check_ref(self_ref)
 
     def __del__(self):
         """
