@@ -91,6 +91,87 @@ ffi.cdef("""
     go_ref NewTxClient(go_ref deps_ref, char *signing_key_name, char **err);
     go_ref TxClient_SignAndBroadcast(AsyncOperation* op, go_ref self_ref, serialized_proto *msg);
     go_ref TxClient_SignAndBroadcastMany(AsyncOperation* op, go_ref self_ref, proto_message_array *msgs);
+    
+    // Params update methods (all modules)
+    go_ref TxClient_UpdateSharedParams(AsyncOperation* op, go_ref self_ref, char *params);
+    go_ref TxClient_UpdateApplicationParams(AsyncOperation* op, go_ref self_ref, char *params);
+    go_ref TxClient_UpdateGatewayParams(AsyncOperation* op, go_ref self_ref, char *params);
+    go_ref TxClient_UpdateSupplierParams(AsyncOperation* op, go_ref self_ref, char *params);
+    go_ref TxClient_UpdateSessionParams(AsyncOperation* op, go_ref self_ref, char *params);
+    go_ref TxClient_UpdateServiceParams(AsyncOperation* op, go_ref self_ref, char *params);
+    go_ref TxClient_UpdateProofParams(AsyncOperation* op, go_ref self_ref, char *params);
+    go_ref TxClient_UpdateTokenomicsParams(AsyncOperation* op, go_ref self_ref, char *params);
+    
+    // Param (individual) update methods (all modules)
+    go_ref TxClient_UpdateSharedParam(AsyncOperation* op, go_ref self_ref, char *params);
+    go_ref TxClient_UpdateApplicationParam(AsyncOperation* op, go_ref self_ref, char *params);
+    go_ref TxClient_UpdateGatewayParam(AsyncOperation* op, go_ref self_ref, char *params);
+    go_ref TxClient_UpdateSupplierParam(AsyncOperation* op, go_ref self_ref, char *params);
+    go_ref TxClient_UpdateSessionParam(AsyncOperation* op, go_ref self_ref, char *params);
+    go_ref TxClient_UpdateServiceParam(AsyncOperation* op, go_ref self_ref, char *params);
+    go_ref TxClient_UpdateProofParam(AsyncOperation* op, go_ref self_ref, char *params);
+    go_ref TxClient_UpdateTokenomicsParam(AsyncOperation* op, go_ref self_ref, char *params);
+    
+    // Application module message methods
+    go_ref TxClient_StakeApplication(AsyncOperation* op, go_ref self_ref, char *address, char *stake, proto_message_array *services);
+    go_ref TxClient_UnstakeApplication(AsyncOperation* op, go_ref self_ref, char *address, char *stake, proto_message_array *services);
+    go_ref TxClient_DelegateToGateway(AsyncOperation* op, go_ref self_ref, char *address, char *stake, proto_message_array *services);
+    go_ref TxClient_UndelegateFromGateway(AsyncOperation* op, go_ref self_ref, char *address, char *stake, proto_message_array *services);
+    go_ref TxClient_TransferApplication(AsyncOperation* op, go_ref self_ref, char *address, char *stake, proto_message_array *services);
+    
+    // Gateway module message methods
+    go_ref TxClient_StakeGateway(AsyncOperation* op, go_ref self_ref, char *address, char *stake);
+    go_ref TxClient_UnstakeGateway(AsyncOperation* op, go_ref self_ref, char *address, char *stake);
+    
+    // Supplier module message methods
+    go_ref TxClient_StakeSupplier(AsyncOperation* op, go_ref self_ref, char *address, char *stake);
+    go_ref TxClient_UnstakeSupplier(AsyncOperation* op, go_ref self_ref, char *address, char *stake);
+    
+    // Service module message methods
+    go_ref TxClient_AddService(AsyncOperation* op, go_ref self_ref, char *owner_address, serialized_proto *service);
+
+    // Proof module message methods
+    go_ref TxClient_CreateClaim(AsyncOperation* op, go_ref self_ref, char *owner_address, char *session_header, char *root_hash, char *proof);
+    go_ref TxClient_SubmitProof(AsyncOperation* op, go_ref self_ref, char *owner_address, char *session_header, char *proof);
+    
+    go_ref NewQueryClient(char *query_node_rpc_url, char **err);
+    
+    // Params query methods (all modules)
+    go_ref QueryClient_GatSharedParams(AsyncOperation* op, go_ref self_ref);
+    go_ref QueryClient_GatApplicationParams(AsyncOperation* op, go_ref self_ref);
+    go_ref QueryClient_GatGatewayParams(AsyncOperation* op, go_ref self_ref);
+    go_ref QueryClient_GatSupplierParams(AsyncOperation* op, go_ref self_ref);
+    go_ref QueryClient_GatSessionParams(AsyncOperation* op, go_ref self_ref);
+    go_ref QueryClient_GatServiceParams(AsyncOperation* op, go_ref self_ref);
+    go_ref QueryClient_GatProofParams(AsyncOperation* op, go_ref self_ref);
+    go_ref QueryClient_GatTokenomicsParams(AsyncOperation* op, go_ref self_ref);
+    
+    // Application module query methods
+    go_ref QueryClient_GetApplication(AsyncOperation* op, go_ref self_ref, char *address);
+    go_ref QueryClient_GetAllApplications(AsyncOperation* op, go_ref self_ref, char *address);
+    
+    // Gateway module query methods
+    go_ref QueryClient_GetGateway(AsyncOperation* op, go_ref self_ref, char *address);
+    go_ref QueryClient_GetAllGateways(AsyncOperation* op, go_ref self_ref, char *address);
+    
+    // Supplier module query methods
+    go_ref QueryClient_GetSupplier(AsyncOperation* op, go_ref self_ref, char *address);
+    go_ref QueryClient_GetAllSuppliers(AsyncOperation* op, go_ref self_ref, char *address);
+    
+    // Session module query methods
+    go_ref QueryClient_GetSession(AsyncOperation* op, go_ref self_ref, char *address);
+    
+    // Service module query methods
+    go_ref QueryClient_GetService(AsyncOperation* op, go_ref self_ref, char *address);
+    go_ref QueryClient_GetAllServices(AsyncOperation* op, go_ref self_ref, char *address);
+    go_ref QueryClient_GetRelayMiningDifficulty(AsyncOperation* op, go_ref self_ref, char *address);
+    go_ref QueryClient_GetAllRelayMiningDifficulties(AsyncOperation* op, go_ref self_ref, char *address);
+    
+    // Proof module query methods
+    go_ref QueryClient_GetClaim(AsyncOperation* op, go_ref self_ref, char *address);
+    go_ref QueryClient_GetAllClaims(AsyncOperation* op, go_ref self_ref, char *address);
+    go_ref QueryClient_GetProof(AsyncOperation* op, go_ref self_ref, char *address);
+    go_ref QueryClient_GetAllProofs(AsyncOperation* op, go_ref self_ref, char *address);
 """)
 
 
