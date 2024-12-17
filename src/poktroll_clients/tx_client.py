@@ -85,6 +85,8 @@ class TxClient(GoManagedMem):
         """
         Creates a new AsyncOperation with callbacks and associated Future.
         The callbacks are protected from garbage collection by storing in self._callback_fns.
+
+        TODO_IN_THIS_COMMIT: & de-duplicate w/ QueryClient...
         """
 
         try:

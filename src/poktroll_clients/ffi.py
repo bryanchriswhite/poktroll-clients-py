@@ -30,6 +30,7 @@ ffi.cdef("""
         long long int __align;
     } pthread_cond_t;
 
+    // TODO: convert to snake case
     typedef struct AsyncContext {
         pthread_mutex_t mutex;
         pthread_cond_t cond;
@@ -45,6 +46,7 @@ ffi.cdef("""
     typedef void (*error_callback)(AsyncContext* ctx, const char* error);
     typedef void (*cleanup_callback)(AsyncContext* ctx);
 
+    // TODO: convert to snake case
     typedef struct AsyncOperation {
         AsyncContext* ctx;
         success_callback on_success;
@@ -78,6 +80,8 @@ ffi.cdef("""
         serialized_proto* messages;
         size_t num_messages;
     } proto_message_array;
+    
+    serialized_proto* GetGoProtoAsSerializedProto(go_ref go_proto_ref, char **err);
 
     go_ref NewEventsQueryClient(const char* comet_websocket_url);
     go_ref EventsQueryClientEventsBytes(go_ref selfRef, const char* query);
@@ -134,17 +138,18 @@ ffi.cdef("""
     go_ref TxClient_CreateClaim(AsyncOperation* op, go_ref self_ref, char *owner_address, char *session_header, char *root_hash, char *proof);
     go_ref TxClient_SubmitProof(AsyncOperation* op, go_ref self_ref, char *owner_address, char *session_header, char *proof);
     
-    go_ref NewQueryClient(char *query_node_rpc_url, char **err);
+    go_ref NewQueryClient(go_ref deps_ref, char *query_node_rpc_url, char **err);
     
     // Params query methods (all modules)
-    go_ref QueryClient_GatSharedParams(AsyncOperation* op, go_ref self_ref);
-    go_ref QueryClient_GatApplicationParams(AsyncOperation* op, go_ref self_ref);
-    go_ref QueryClient_GatGatewayParams(AsyncOperation* op, go_ref self_ref);
-    go_ref QueryClient_GatSupplierParams(AsyncOperation* op, go_ref self_ref);
-    go_ref QueryClient_GatSessionParams(AsyncOperation* op, go_ref self_ref);
-    go_ref QueryClient_GatServiceParams(AsyncOperation* op, go_ref self_ref);
-    go_ref QueryClient_GatProofParams(AsyncOperation* op, go_ref self_ref);
-    go_ref QueryClient_GatTokenomicsParams(AsyncOperation* op, go_ref self_ref);
+    // go_ref QueryClient_GetSharedParams(AsyncOperation* op, go_ref self_ref);
+    go_ref QueryClient_GetSharedParams(go_ref self_ref, char **err);
+    go_ref QueryClient_GetApplicationParams(AsyncOperation* op, go_ref self_ref);
+    go_ref QueryClient_GetGatewayParams(AsyncOperation* op, go_ref self_ref);
+    go_ref QueryClient_GetSupplierParams(AsyncOperation* op, go_ref self_ref);
+    go_ref QueryClient_GetSessionParams(AsyncOperation* op, go_ref self_ref);
+    go_ref QueryClient_GetServiceParams(AsyncOperation* op, go_ref self_ref);
+    go_ref QueryClient_GetProofParams(AsyncOperation* op, go_ref self_ref);
+    go_ref QueryClient_GetTokenomicsParams(AsyncOperation* op, go_ref self_ref);
     
     // Application module query methods
     go_ref QueryClient_GetApplication(AsyncOperation* op, go_ref self_ref, char *address);

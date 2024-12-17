@@ -25,7 +25,7 @@ class BlockQueryClient(GoManagedMem):
     TODO_IN_THIS_COMMIT: comment
     """
 
-    self_ref: go_ref
+    go_ref: go_ref
     err_ptr: ffi.CData
 
     def __init__(self, query_node_rpc_url: str):
