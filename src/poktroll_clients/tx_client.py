@@ -7,12 +7,19 @@ from google.protobuf.message import Message
 
 from cffi import FFIError
 
-from poktroll_clients.events_query_client import EventsQueryClient
-from poktroll_clients.block_client import BlockClient, BlockQueryClient
-from poktroll_clients.depinject import SupplyMany
-from poktroll_clients.tx_context import TxContext
-from poktroll_clients.ffi import ffi, libpoktroll_clients
-from poktroll_clients.go_memory import GoManagedMem, go_ref, check_err, check_ref
+from poktroll_clients import (
+    EventsQueryClient,
+    BlockClient,
+    BlockQueryClient,
+    SupplyMany,
+    TxContext,
+    libpoktroll_clients,
+    ffi,
+    go_ref,
+    GoManagedMem,
+    check_err,
+    check_ref,
+)
 from poktroll_clients.protobuf import SerializedProto, ProtoMessageArray
 
 
@@ -78,6 +85,8 @@ class TxClient(GoManagedMem):
         """
         Creates a new AsyncOperation with callbacks and associated Future.
         The callbacks are protected from garbage collection by storing in self._callback_fns.
+
+        TODO_IN_THIS_COMMIT: & de-duplicate w/ QueryClient...
         """
 
         try:

@@ -10,7 +10,7 @@ callback_type = Callable[[ffi.CData, ffi.CData], None]
 
 # TODO_IN_THIS_COMMIT: switch to an err_msg[] array
 
-def check_err(err_ptr: ffi.CData):
+def check_err(err_ptr: ffi.CData) -> None:
     """
     TODO_IN_THIS_COMMIT: comment...
     """
@@ -18,7 +18,7 @@ def check_err(err_ptr: ffi.CData):
         raise FFIError(ffi.string(err_ptr[0]))
 
 
-def check_ref(go_ref: go_ref):
+def check_ref(go_ref: go_ref) -> None:
     if go_ref < 1:
         raise FFIError("unexpected emtpy go_ref")
 
@@ -34,15 +34,15 @@ class GoManagedMem:
     go_ref: go_ref
     err_ptr: ffi.CData = ffi.new("char **")
 
-    def __init__(self, go_ref: go_ref):
+    def __init__(self, self_ref: go_ref):
         """
         Constructor for GoManagedMem. Stores the Go-managed memory reference.
         """
 
-        self.go_ref = go_ref
+        self.go_ref = self_ref
 
         check_err(self.err_ptr)
-        check_ref(go_ref)
+        check_ref(self_ref)
 
     def __del__(self):
         """
