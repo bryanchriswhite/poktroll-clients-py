@@ -2,10 +2,9 @@ from time import sleep
 
 import pytest
 from poktroll_clients.proto.cosmos.base.v1beta1.coin_pb2 import Coin
-from poktroll_clients.proto.poktroll.gateway.tx_pb2 import MsgStakeGateway, MsgUnstakeGateway
-from poktroll_clients.proto.poktroll.shared.service_pb2 import ApplicationServiceConfig
-from poktroll_clients.proto.poktroll.application.tx_pb2 import MsgStakeApplication, MsgUnstakeApplication, MsgDelegateToGateway
-from poktroll_clients.proto.cosmos.bank.v1beta1.tx_pb2 import MsgSend
+from poktroll_clients.proto.pocket.gateway.tx_pb2 import MsgStakeGateway, MsgUnstakeGateway
+from poktroll_clients.proto.pocket.shared.service_pb2 import ApplicationServiceConfig
+from poktroll_clients.proto.pocket.application.tx_pb2 import MsgStakeApplication, MsgUnstakeApplication, MsgDelegateToGateway
 from poktroll_clients import (
     BlockClient,
     BlockQueryClient,
@@ -31,14 +30,13 @@ async def test_sign_and_broadcast_success():
     deps_ref = get_tx_client_deps()
     tx_client = TxClient("pnf", deps_ref)
 
-    send_msg_from_pnf_to_app3 = MsgSend(
-        from_address="pokt1eeeksh2tvkh7wzmfrljnhw4wrhs55lcuvmekkw",
-        to_address="pokt1lqyu4v88vp8tzc86eaqr4lq8rwhssyn6rfwzex",
-        amount=[Coin(denom="upokt", amount="100")]
+    stake_gateway_msg = MsgStakeGateway(
+        address="pokt1eeeksh2tvkh7wzmfrljnhw4wrhs55lcuvmekkw",
+        stake=Coin(denom="upokt", amount="100000000"),
     )
 
     try:
-        await tx_client.sign_and_broadcast(send_msg_from_pnf_to_app3)
+        await tx_client.sign_and_broadcast(stake_gateway_msg)
     except Exception as e:
         pytest.fail(f"SignAndBroadcast failed with error: {str(e)}")
 
