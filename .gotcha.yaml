@@ -1,0 +1,14 @@
+# GOTCHA project configuration
+# Override agent behavior for this project
+
+project:
+  name: poktroll-clients-py
+
+# Agent-specific overrides (prompt_append is added to agent prompts)
+# agents:
+#   implementer:
+#     prompt_append: |
+#       Project-specific instructions for the implementer...
+#   validator:
+#     prompt_append: |
+#       Project-specific validation rules...
