@@ -95,6 +95,7 @@ class MorseKeyManager(GoManagedMem):
         self,
         shannon_owner_addr: str,
         shannon_operator_addr: str,
+        morse_node_addr: str,
         supplier_service_configs: List[service_pb2.SupplierServiceConfig],
         shannon_signing_addr: str,
     ) -> migration_tx_pb2.MsgClaimMorseSupplier:
@@ -102,6 +103,7 @@ class MorseKeyManager(GoManagedMem):
         Create a signed MsgClaimMorseSupplier for claiming and staking as a supplier.
         :param shannon_owner_addr: Bech32 Shannon owner address.
         :param shannon_operator_addr: Bech32 Shannon operator address.
+        :param morse_node_addr: The Morse node address associated with the supplier.
         :param supplier_service_configs: List of SupplierServiceConfig protos for the supplier.
         :param shannon_signing_addr: Bech32 Shannon address of the transaction signer.
         :return: A fully signed MsgClaimMorseSupplier ready for broadcast.
@@ -119,6 +121,7 @@ class MorseKeyManager(GoManagedMem):
         raw_ptr = libpoktroll_clients.NewSerializedSignedMsgClaimMorseSupplier(
             shannon_owner_addr.encode('utf-8'),
             shannon_operator_addr.encode('utf-8'),
+            morse_node_addr.encode('utf-8'),
             self.go_ref,
             c_configs,
             shannon_signing_addr.encode('utf-8'),

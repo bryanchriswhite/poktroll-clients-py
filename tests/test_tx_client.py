@@ -9,7 +9,6 @@ from poktroll_clients import (
     BlockClient,
     BlockQueryClient,
     SupplyMany,
-    EventsQueryClient,
     go_ref,
     TxContext,
     TxClient,
@@ -104,12 +103,11 @@ async def test_sign_and_broadcast_error():
 
 
 def get_tx_client_deps() -> go_ref:
-    events_query_client = EventsQueryClient("ws://127.0.0.1:26657/websocket")
     block_query_client = BlockQueryClient("http://127.0.0.1:26657")
 
-    deps_ref = SupplyMany(events_query_client, block_query_client)
+    deps_ref = SupplyMany(block_query_client)
     block_client = BlockClient(deps_ref)
 
     tx_ctx = TxContext("tcp://127.0.0.1:26657")
 
-    return SupplyMany(events_query_client, block_client, tx_ctx)
+    return SupplyMany(block_query_client, block_client, tx_ctx)

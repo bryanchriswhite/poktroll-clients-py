@@ -1,11 +1,10 @@
 import pytest
-from poktroll_clients import QueryClient, EventsQueryClient, BlockQueryClient, SupplyMany
+from poktroll_clients import QueryClient, BlockQueryClient, SupplyMany
 
 
 def get_query_client_deps():
-    events_query_client = EventsQueryClient("ws://127.0.0.1:26657/websocket")
     block_query_client = BlockQueryClient("http://127.0.0.1:26657")
-    return SupplyMany(events_query_client, block_query_client)
+    return SupplyMany(block_query_client)
 
 
 def test_query_client():

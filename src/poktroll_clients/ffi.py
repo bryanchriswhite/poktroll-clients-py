@@ -111,10 +111,6 @@ ffi.cdef(f"""
     /* ── morse keys ── */
     typedef uint8_t morse_signature[64];
 
-    /* ── events query client ── */
-    go_ref NewEventsQueryClient(char* cometWebsocketURLCString);
-    go_ref EventsQueryClientEventsBytes(go_ref clientRef, char* query, char** cErr);
-
     /* ── block client ── */
     go_ref NewBlockClient(go_ref depsRef, char** cErr);
 
@@ -167,7 +163,7 @@ ffi.cdef(f"""
     go_ref LoadMorsePrivateKey(char* morseKeyExportPath, char* passphrase, char** cErr);
     void* NewSerializedSignedMsgClaimMorseAccount(char* cShannonDestAddr, go_ref privKeyRef, char* cShannonSigningAddr, char** cErr);
     void* NewSerializedSignedMsgClaimMorseApplication(char* cShannonDestAddr, go_ref privKeyRef, char* serviceId, char* cShannonSigningAddr, char** cErr);
-    void* NewSerializedSignedMsgClaimMorseSupplier(char* cShannonOwnerAddr, char* cShannonOperatorAddr, go_ref privKeyRef, serialized_proto_array* cSupplierServiceConfigs, char* cShannonSigningAddr, char** cErr);
+    void* NewSerializedSignedMsgClaimMorseSupplier(char* cShannonOwnerAddr, char* cShannonOperatorAddr, char* cMorseNodeAddr, go_ref privKeyRef, serialized_proto_array* cSupplierServiceConfigs, char* cShannonSigningAddr, char** cErr);
     char* GetMorseAddress(go_ref privKeyRef, char** cErr);
     void SignMorseClaimMsg(serialized_proto* cSerializedProto, go_ref privKeyRef, uint8_t* cOutMorseSignature, char** cErr);
 """)

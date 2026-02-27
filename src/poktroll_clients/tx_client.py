@@ -1,13 +1,11 @@
 import asyncio
 from typing import Dict, Tuple
-from urllib.parse import urlparse
 
 from atomics import INTEGRAL, atomic, INT
 from google.protobuf.message import Message
 
 from cffi import FFIError
 
-from poktroll_clients.events_query_client import EventsQueryClient
 from poktroll_clients.block_client import BlockClient, BlockQueryClient
 from poktroll_clients.depinject import SupplyMany
 from poktroll_clients.tx_context import TxContext
@@ -154,14 +152,14 @@ def _new_tx_client_depinject_config(
     if not tx_node_rpc_url:
         raise ValueError("tx_node_rpc_url must be specified")
 
-    query_node_ws_url = urlparse(query_node_rpc_url)._replace(scheme="ws", path="/websocket")
-
-    events_query_client = EventsQueryClient(query_node_ws_url.geturl())
     block_query_client = BlockQueryClient(query_node_rpc_url)
 
-    deps_ref = SupplyMany(events_query_client, block_query_client)
+    # BlockQueryClient wraps *http.HTTP which satisfies both
+    # client.BlockQueryClient and cometclient.Client interfaces.
+    # The CGO layer injects a polylog.Logger automatically.
+    deps_ref = SupplyMany(block_query_client)
     block_client = BlockClient(deps_ref)
 
     tx_ctx = TxContext(tx_node_rpc_url)
 
-    return SupplyMany(events_query_client, block_client, tx_ctx)
+    return SupplyMany(block_query_client, block_client, tx_ctx)
