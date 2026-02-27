@@ -17,9 +17,7 @@ from poktroll_clients.protobuf import SerializedProto, ProtoMessageArray
 
 
 class TxClient(GoManagedMem):
-    """
-    TODO_IN_THIS_COMMIT: comment
-    """
+    """Signs and broadcasts transactions via a CometBFT node."""
 
     go_ref: go_ref
     err_ptr: ffi.CData
@@ -30,7 +28,8 @@ class TxClient(GoManagedMem):
                  signing_key_name: str,
                  deps_ref: go_ref = -1,
                  query_node_rpc_url: str = "",
-                 tx_node_rpc_url: str = ""):
+                 tx_node_rpc_url: str = "",
+                 gas_settings: dict = None):
         """
         Constructor for TxClient.
 
@@ -40,11 +39,21 @@ class TxClient(GoManagedMem):
         if deps_ref == -1:
             deps_ref = _new_tx_client_depinject_config(query_node_rpc_url, tx_node_rpc_url)
 
-        go_ref = libpoktroll_clients.NewTxClient(deps_ref, signing_key_name.encode('utf-8'), self.err_ptr)
-        super().__init__(go_ref)
+        c_gas_settings = ffi.NULL
+        if gas_settings is not None:
+            c_gas_settings = ffi.new("gas_settings *")
+            c_gas_settings.gas_limit = gas_settings.get("gas_limit", 0)
+            c_gas_settings.simulate = gas_settings.get("simulate", False)
+            gas_prices = gas_settings.get("gas_prices", "")
+            c_gas_settings.gas_prices = ffi.new("char[]", gas_prices.encode('utf-8')) if gas_prices else ffi.NULL
+            c_gas_settings.gas_adjustment = gas_settings.get("gas_adjustment", 0.0)
+            fees = gas_settings.get("fees", "")
+            c_gas_settings.fees = ffi.new("char[]", fees.encode('utf-8')) if fees else ffi.NULL
+            # Store references to prevent GC
+            self._gas_settings = c_gas_settings
 
-        check_err(self.err_ptr)
-        check_ref(go_ref)
+        go_ref = libpoktroll_clients.NewTxClient(deps_ref, signing_key_name.encode('utf-8'), c_gas_settings, self.err_ptr)
+        super().__init__(go_ref)
 
     async def sign_and_broadcast(self, *msgs: Message) -> asyncio.Future:
         """
@@ -137,21 +146,15 @@ def _new_tx_client_depinject_config(
         query_node_rpc_url: str,
         tx_node_rpc_url: str
 ) -> go_ref:
-    """
-    TODO_IN_THIS_COMMIT: comment
-    """
+    """Create a depinject config for a standalone TxClient."""
 
-    # TODO_IN_THIS_COMMIT: add more detail to the error messages,
-    # explaining the expected format, with an example.
     if not query_node_rpc_url:
         raise ValueError("query_node_rpc_url must be specified")
 
     if not tx_node_rpc_url:
         raise ValueError("tx_node_rpc_url must be specified")
 
-    query_node_ws_url = urlparse(query_node_rpc_url)
-    query_node_ws_url.scheme = "ws"
-    query_node_ws_url.path = "websocket"
+    query_node_ws_url = urlparse(query_node_rpc_url)._replace(scheme="ws", path="/websocket")
 
     events_query_client = EventsQueryClient(query_node_ws_url.geturl())
     block_query_client = BlockQueryClient(query_node_rpc_url)

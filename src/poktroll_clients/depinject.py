@@ -35,3 +35,21 @@ def SupplyMany(*go_objs: GoManagedMem) -> go_ref:
     check_ref(deps_ref)
 
     return deps_ref
+
+
+def Config(*go_objs: GoManagedMem) -> go_ref:
+    """
+    Creates a depinject config from multiple Go-managed memory references.
+    :param go_objs: The Go-managed memory objects to include in the config.
+    :return: The Go-managed memory reference of the resulting depinject config.
+    """
+    go_refs = [go_obj.go_ref for go_obj in go_objs]
+    cgo_refs = ffi.new("go_ref[]", go_refs)
+    err_ptr = ffi.new("char **")
+
+    config_ref = libpoktroll_clients.Config(cgo_refs, len(go_objs), err_ptr)
+
+    check_err(err_ptr)
+    check_ref(config_ref)
+
+    return config_ref

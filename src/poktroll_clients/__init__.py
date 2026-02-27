@@ -5,8 +5,10 @@ from .block_client import BlockClient, BlockQueryClient
 from .tx_context import TxContext
 from .tx_client import TxClient
 from .events_query_client import EventsQueryClient
-from .depinject import Supply, SupplyMany
+from .query_client import QueryClient
+from .depinject import Supply, SupplyMany, Config
 from .go_memory import go_ref
+from .morse_key_manager import MorseKeyManager
 
 __all__ = [
     'BlockClient',
@@ -14,7 +16,10 @@ __all__ = [
     'TxContext',
     'TxClient',
     'EventsQueryClient',
+    'QueryClient',
     'Supply',
     'SupplyMany',
+    'Config',
     'go_ref',
+    'MorseKeyManager',
 ]
