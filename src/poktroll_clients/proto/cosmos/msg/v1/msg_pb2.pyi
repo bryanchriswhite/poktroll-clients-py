@@ -3,23 +3,23 @@
 isort:skip_file
 """
 
-import builtins
-import google.protobuf.descriptor
-import google.protobuf.descriptor_pb2
-import google.protobuf.internal.containers
-import google.protobuf.internal.extension_dict
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import descriptor_pb2 as _descriptor_pb2
+from google.protobuf.internal import containers as _containers
+from google.protobuf.internal import extension_dict as _extension_dict
+import builtins as _builtins
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+DESCRIPTOR: _descriptor.FileDescriptor
 
-SERVICE_FIELD_NUMBER: builtins.int
-SIGNER_FIELD_NUMBER: builtins.int
-service: google.protobuf.internal.extension_dict._ExtensionFieldDescriptor[google.protobuf.descriptor_pb2.ServiceOptions, builtins.bool]
+SERVICE_FIELD_NUMBER: _builtins.int
+SIGNER_FIELD_NUMBER: _builtins.int
+service: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.ServiceOptions, _builtins.bool]
 """service indicates that the service is a Msg service and that requests
 must be transported via blockchain transactions rather than gRPC.
 Tooling can use this annotation to distinguish between Msg services and
 other types of services via reflection.
 """
-signer: google.protobuf.internal.extension_dict._ExtensionFieldDescriptor[google.protobuf.descriptor_pb2.MessageOptions, google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]]
+signer: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.MessageOptions, _containers.RepeatedScalarFieldContainer[_builtins.str]]
 """signer must be used in cosmos messages in order
 to signal to external clients which fields in a
 given cosmos message must be filled with signer

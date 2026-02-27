@@ -1,6 +1,6 @@
-version: v1
+version: v2
 plugins:
-  - plugin: python
+  - protoc_builtin: python
     out: src/poktroll_clients/proto
-  - plugin: mypy
+  - local: protoc-gen-mypy
     out: src/poktroll_clients/proto

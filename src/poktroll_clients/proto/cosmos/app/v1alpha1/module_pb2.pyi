@@ -3,41 +3,47 @@
 isort:skip_file
 """
 
-import builtins
-import collections.abc
-import google.protobuf.descriptor
-import google.protobuf.descriptor_pb2
-import google.protobuf.internal.containers
-import google.protobuf.internal.extension_dict
-import google.protobuf.message
-import typing
+from collections import abc as _abc
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import descriptor_pb2 as _descriptor_pb2
+from google.protobuf import message as _message
+from google.protobuf.internal import containers as _containers
+from google.protobuf.internal import extension_dict as _extension_dict
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class ModuleDescriptor(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class ModuleDescriptor(_message.Message):
     """ModuleDescriptor describes an app module."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    GO_IMPORT_FIELD_NUMBER: builtins.int
-    USE_PACKAGE_FIELD_NUMBER: builtins.int
-    CAN_MIGRATE_FROM_FIELD_NUMBER: builtins.int
-    go_import: builtins.str
+    GO_IMPORT_FIELD_NUMBER: _builtins.int
+    USE_PACKAGE_FIELD_NUMBER: _builtins.int
+    CAN_MIGRATE_FROM_FIELD_NUMBER: _builtins.int
+    go_import: _builtins.str
     """go_import names the package that should be imported by an app to load the
     module in the runtime module registry. It is required to make debugging
     of configuration errors easier for users.
     """
-    @property
-    def use_package(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___PackageReference]:
+    @_builtins.property
+    def use_package(self) -> _containers.RepeatedCompositeFieldContainer[Global___PackageReference]:
         """use_package refers to a protobuf package that this module
         uses and exposes to the world. In an app, only one module should "use"
         or own a single protobuf package. It is assumed that the module uses
         all of the .proto files in a single package.
         """
 
-    @property
-    def can_migrate_from(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___MigrateFromInfo]:
+    @_builtins.property
+    def can_migrate_from(self) -> _containers.RepeatedCompositeFieldContainer[Global___MigrateFromInfo]:
         """can_migrate_from defines which module versions this module can migrate
         state from. The framework will check that one module version is able to
         migrate from a previous module version before attempting to update its
@@ -50,25 +56,26 @@ class ModuleDescriptor(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        go_import: builtins.str = ...,
-        use_package: collections.abc.Iterable[global___PackageReference] | None = ...,
-        can_migrate_from: collections.abc.Iterable[global___MigrateFromInfo] | None = ...,
+        go_import: _builtins.str = ...,
+        use_package: _abc.Iterable[Global___PackageReference] | None = ...,
+        can_migrate_from: _abc.Iterable[Global___MigrateFromInfo] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["can_migrate_from", b"can_migrate_from", "go_import", b"go_import", "use_package", b"use_package"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["can_migrate_from", b"can_migrate_from", "go_import", b"go_import", "use_package", b"use_package"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ModuleDescriptor = ModuleDescriptor
+Global___ModuleDescriptor: _TypeAlias = ModuleDescriptor  # noqa: Y015
 
-@typing.final
-class PackageReference(google.protobuf.message.Message):
+@_typing.final
+class PackageReference(_message.Message):
     """PackageReference is a reference to a protobuf package used by a module."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    REVISION_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    REVISION_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """name is the fully-qualified name of the package."""
-    revision: builtins.int
+    revision: _builtins.int
     """revision is the optional revision of the package that is being used.
     Protobuf packages used in Cosmos should generally have a major version
     as the last part of the package name, ex. foo.bar.baz.v1.
@@ -108,37 +115,39 @@ class PackageReference(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        name: builtins.str = ...,
-        revision: builtins.int = ...,
+        name: _builtins.str = ...,
+        revision: _builtins.int = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name", "revision", b"revision"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name", "revision", b"revision"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___PackageReference = PackageReference
+Global___PackageReference: _TypeAlias = PackageReference  # noqa: Y015
 
-@typing.final
-class MigrateFromInfo(google.protobuf.message.Message):
+@_typing.final
+class MigrateFromInfo(_message.Message):
     """MigrateFromInfo is information on a module version that a newer module
     can migrate from.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    MODULE_FIELD_NUMBER: builtins.int
-    module: builtins.str
+    MODULE_FIELD_NUMBER: _builtins.int
+    module: _builtins.str
     """module is the fully-qualified protobuf name of the module config object
     for the previous module version, ex: "cosmos.group.module.v1.Module".
     """
     def __init__(
         self,
         *,
-        module: builtins.str = ...,
+        module: _builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["module", b"module"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["module", b"module"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___MigrateFromInfo = MigrateFromInfo
+Global___MigrateFromInfo: _TypeAlias = MigrateFromInfo  # noqa: Y015
 
-MODULE_FIELD_NUMBER: builtins.int
-module: google.protobuf.internal.extension_dict._ExtensionFieldDescriptor[google.protobuf.descriptor_pb2.MessageOptions, global___ModuleDescriptor]
+MODULE_FIELD_NUMBER: _builtins.int
+module: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.MessageOptions, Global___ModuleDescriptor]
 """module indicates that this proto type is a config object for an app module
 and optionally provides other descriptive information about the module.
 It is recommended that a new module config object and go module is versioned

@@ -3,27 +3,27 @@
 isort:skip_file
 """
 
-import builtins
-import google.protobuf.descriptor
-import google.protobuf.descriptor_pb2
-import google.protobuf.internal.extension_dict
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import descriptor_pb2 as _descriptor_pb2
+from google.protobuf.internal import extension_dict as _extension_dict
+import builtins as _builtins
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+DESCRIPTOR: _descriptor.FileDescriptor
 
-NAME_FIELD_NUMBER: builtins.int
-MESSAGE_ENCODING_FIELD_NUMBER: builtins.int
-ENCODING_FIELD_NUMBER: builtins.int
-FIELD_NAME_FIELD_NUMBER: builtins.int
-DONT_OMITEMPTY_FIELD_NUMBER: builtins.int
-ONEOF_NAME_FIELD_NUMBER: builtins.int
-name: google.protobuf.internal.extension_dict._ExtensionFieldDescriptor[google.protobuf.descriptor_pb2.MessageOptions, builtins.str]
+NAME_FIELD_NUMBER: _builtins.int
+MESSAGE_ENCODING_FIELD_NUMBER: _builtins.int
+ENCODING_FIELD_NUMBER: _builtins.int
+FIELD_NAME_FIELD_NUMBER: _builtins.int
+DONT_OMITEMPTY_FIELD_NUMBER: _builtins.int
+ONEOF_NAME_FIELD_NUMBER: _builtins.int
+name: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.MessageOptions, _builtins.str]
 """name is the string used when registering a concrete
 type into the Amino type registry, via the Amino codec's
 `RegisterConcrete()` method. This string MUST be at most 39
 characters long, or else the message will be rejected by the
 Ledger hardware device.
 """
-message_encoding: google.protobuf.internal.extension_dict._ExtensionFieldDescriptor[google.protobuf.descriptor_pb2.MessageOptions, builtins.str]
+message_encoding: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.MessageOptions, _builtins.str]
 """encoding describes the encoding format used by Amino for the given
 message. The field type is chosen to be a string for
 flexibility, but it should ideally be short and expected to be
@@ -36,7 +36,7 @@ Protobuf one.
 This annotation should not be confused with the `encoding`
 one which operates on the field level.
 """
-encoding: google.protobuf.internal.extension_dict._ExtensionFieldDescriptor[google.protobuf.descriptor_pb2.FieldOptions, builtins.str]
+encoding: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.FieldOptions, _builtins.str]
 """encoding describes the encoding format used by Amino for
 the given field. The field type is chosen to be a string for
 flexibility, but it should ideally be short and expected to be
@@ -49,7 +49,7 @@ Protobuf one.
 This annotation should not be confused with the
 `message_encoding` one which operates on the message level.
 """
-field_name: google.protobuf.internal.extension_dict._ExtensionFieldDescriptor[google.protobuf.descriptor_pb2.FieldOptions, builtins.str]
+field_name: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.FieldOptions, _builtins.str]
 """field_name sets a different field name (i.e. key name) in
 the amino JSON object for the given field.
 
@@ -62,7 +62,7 @@ message Foo {
 Then the Amino encoding of Foo will be:
 `{"baz":"some value"}`
 """
-dont_omitempty: google.protobuf.internal.extension_dict._ExtensionFieldDescriptor[google.protobuf.descriptor_pb2.FieldOptions, builtins.bool]
+dont_omitempty: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.FieldOptions, _builtins.bool]
 """dont_omitempty sets the field in the JSON object even if
 its value is empty, i.e. equal to the Golang zero value. To learn what
 the zero values are, see https://go.dev/ref/spec#The_zero_value.
@@ -82,7 +82,7 @@ f := Foo{};
 out := AminoJSONEncoder(&f);
 out == {"baz":""}
 """
-oneof_name: google.protobuf.internal.extension_dict._ExtensionFieldDescriptor[google.protobuf.descriptor_pb2.FieldOptions, builtins.str]
+oneof_name: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.FieldOptions, _builtins.str]
 """oneof_name sets the type name for the given field oneof field.  This is used
 by the Amino JSON encoder to encode the type of the oneof field, and must be the same string in
 the RegisterConcrete() method usage used to register the concrete type.

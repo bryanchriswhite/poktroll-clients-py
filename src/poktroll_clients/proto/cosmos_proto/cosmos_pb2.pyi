@@ -3,30 +3,30 @@
 isort:skip_file
 """
 
-import builtins
-import collections.abc
-import google.protobuf.descriptor
-import google.protobuf.descriptor_pb2
-import google.protobuf.internal.containers
-import google.protobuf.internal.enum_type_wrapper
-import google.protobuf.internal.extension_dict
-import google.protobuf.message
+from collections import abc as _abc
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import descriptor_pb2 as _descriptor_pb2
+from google.protobuf import message as _message
+from google.protobuf.internal import containers as _containers
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
+from google.protobuf.internal import extension_dict as _extension_dict
+import builtins as _builtins
 import sys
-import typing
+import typing as _typing
 
 if sys.version_info >= (3, 10):
-    import typing as typing_extensions
+    from typing import TypeAlias as _TypeAlias
 else:
-    import typing_extensions
+    from typing_extensions import TypeAlias as _TypeAlias
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+DESCRIPTOR: _descriptor.FileDescriptor
 
 class _ScalarType:
-    ValueType = typing.NewType("ValueType", builtins.int)
-    V: typing_extensions.TypeAlias = ValueType
+    ValueType = _typing.NewType("ValueType", _builtins.int)
+    V: _TypeAlias = ValueType  # noqa: Y015
 
-class _ScalarTypeEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_ScalarType.ValueType], builtins.type):
-    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+class _ScalarTypeEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_ScalarType.ValueType], _builtins.type):
+    DESCRIPTOR: _descriptor.EnumDescriptor
     SCALAR_TYPE_UNSPECIFIED: _ScalarType.ValueType  # 0
     SCALAR_TYPE_STRING: _ScalarType.ValueType  # 1
     SCALAR_TYPE_BYTES: _ScalarType.ValueType  # 2
@@ -36,40 +36,41 @@ class ScalarType(_ScalarType, metaclass=_ScalarTypeEnumTypeWrapper): ...
 SCALAR_TYPE_UNSPECIFIED: ScalarType.ValueType  # 0
 SCALAR_TYPE_STRING: ScalarType.ValueType  # 1
 SCALAR_TYPE_BYTES: ScalarType.ValueType  # 2
-global___ScalarType = ScalarType
+Global___ScalarType: _TypeAlias = ScalarType  # noqa: Y015
 
-@typing.final
-class InterfaceDescriptor(google.protobuf.message.Message):
+@_typing.final
+class InterfaceDescriptor(_message.Message):
     """InterfaceDescriptor describes an interface type to be used with
     accepts_interface and implements_interface and declared by declare_interface.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """name is the name of the interface. It should be a short-name (without
     a period) such that the fully qualified name of the interface will be
     package.name, ex. for the package a.b and interface named C, the
     fully-qualified name will be a.b.C.
     """
-    description: builtins.str
+    description: _builtins.str
     """description is a human-readable description of the interface and its
     purpose.
     """
     def __init__(
         self,
         *,
-        name: builtins.str = ...,
-        description: builtins.str = ...,
+        name: _builtins.str = ...,
+        description: _builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["description", b"description", "name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["description", b"description", "name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___InterfaceDescriptor = InterfaceDescriptor
+Global___InterfaceDescriptor: _TypeAlias = InterfaceDescriptor  # noqa: Y015
 
-@typing.final
-class ScalarDescriptor(google.protobuf.message.Message):
+@_typing.final
+class ScalarDescriptor(_message.Message):
     """ScalarDescriptor describes an scalar type to be used with
     the scalar field option and declared by declare_scalar.
     Scalars extend simple protobuf built-in types with additional
@@ -79,24 +80,24 @@ class ScalarDescriptor(google.protobuf.message.Message):
     i.e. the encoding should be deterministic.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    FIELD_TYPE_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    FIELD_TYPE_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """name is the name of the scalar. It should be a short-name (without
     a period) such that the fully qualified name of the scalar will be
     package.name, ex. for the package a.b and scalar named C, the
     fully-qualified name will be a.b.C.
     """
-    description: builtins.str
+    description: _builtins.str
     """description is a human-readable description of the scalar and its
     encoding format. For instance a big integer or decimal scalar should
     specify precisely the expected encoding format.
     """
-    @property
-    def field_type(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[global___ScalarType.ValueType]:
+    @_builtins.property
+    def field_type(self) -> _containers.RepeatedScalarFieldContainer[Global___ScalarType.ValueType]:
         """field_type is the type of field with which this scalar can be used.
         Scalars can be used with one and only one type of field so that
         encoding standards and simple and clear. Currently only string and
@@ -106,38 +107,49 @@ class ScalarDescriptor(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        name: builtins.str = ...,
-        description: builtins.str = ...,
-        field_type: collections.abc.Iterable[global___ScalarType.ValueType] | None = ...,
+        name: _builtins.str = ...,
+        description: _builtins.str = ...,
+        field_type: _abc.Iterable[Global___ScalarType.ValueType] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["description", b"description", "field_type", b"field_type", "name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["description", b"description", "field_type", b"field_type", "name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ScalarDescriptor = ScalarDescriptor
+Global___ScalarDescriptor: _TypeAlias = ScalarDescriptor  # noqa: Y015
 
-IMPLEMENTS_INTERFACE_FIELD_NUMBER: builtins.int
-ACCEPTS_INTERFACE_FIELD_NUMBER: builtins.int
-SCALAR_FIELD_NUMBER: builtins.int
-DECLARE_INTERFACE_FIELD_NUMBER: builtins.int
-DECLARE_SCALAR_FIELD_NUMBER: builtins.int
-implements_interface: google.protobuf.internal.extension_dict._ExtensionFieldDescriptor[google.protobuf.descriptor_pb2.MessageOptions, google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]]
+METHOD_ADDED_IN_FIELD_NUMBER: _builtins.int
+IMPLEMENTS_INTERFACE_FIELD_NUMBER: _builtins.int
+MESSAGE_ADDED_IN_FIELD_NUMBER: _builtins.int
+ACCEPTS_INTERFACE_FIELD_NUMBER: _builtins.int
+SCALAR_FIELD_NUMBER: _builtins.int
+FIELD_ADDED_IN_FIELD_NUMBER: _builtins.int
+DECLARE_INTERFACE_FIELD_NUMBER: _builtins.int
+DECLARE_SCALAR_FIELD_NUMBER: _builtins.int
+FILE_ADDED_IN_FIELD_NUMBER: _builtins.int
+method_added_in: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.MethodOptions, _builtins.str]
+"""method_added_in is used to indicate from which version the method was added."""
+implements_interface: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.MessageOptions, _containers.RepeatedScalarFieldContainer[_builtins.str]]
 """implements_interface is used to indicate the type name of the interface
 that a message implements so that it can be used in google.protobuf.Any
 fields that accept that interface. A message can implement multiple
 interfaces. Interfaces should be declared using a declare_interface
 file option.
 """
-accepts_interface: google.protobuf.internal.extension_dict._ExtensionFieldDescriptor[google.protobuf.descriptor_pb2.FieldOptions, builtins.str]
+message_added_in: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.MessageOptions, _builtins.str]
+"""message_added_in is used to indicate from which version the message was added."""
+accepts_interface: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.FieldOptions, _builtins.str]
 """accepts_interface is used to annotate that a google.protobuf.Any
 field accepts messages that implement the specified interface.
 Interfaces should be declared using a declare_interface file option.
 """
-scalar: google.protobuf.internal.extension_dict._ExtensionFieldDescriptor[google.protobuf.descriptor_pb2.FieldOptions, builtins.str]
+scalar: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.FieldOptions, _builtins.str]
 """scalar is used to indicate that this field follows the formatting defined
 by the named scalar which should be declared with declare_scalar. Code
 generators may choose to use this information to map this field to a
 language-specific type representing the scalar.
 """
-declare_interface: google.protobuf.internal.extension_dict._ExtensionFieldDescriptor[google.protobuf.descriptor_pb2.FileOptions, google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___InterfaceDescriptor]]
+field_added_in: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.FieldOptions, _builtins.str]
+"""field_added_in is used to indicate from which version the field was added."""
+declare_interface: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.FileOptions, _containers.RepeatedCompositeFieldContainer[Global___InterfaceDescriptor]]
 """declare_interface declares an interface type to be used with
 accepts_interface and implements_interface. Interface names are
 expected to follow the following convention such that their declaration
@@ -145,7 +157,7 @@ can be discovered by tools: for a given interface type a.b.C, it is
 expected that the declaration will be found in a protobuf file named
 a/b/interfaces.proto in the file descriptor set.
 """
-declare_scalar: google.protobuf.internal.extension_dict._ExtensionFieldDescriptor[google.protobuf.descriptor_pb2.FileOptions, google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___ScalarDescriptor]]
+declare_scalar: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.FileOptions, _containers.RepeatedCompositeFieldContainer[Global___ScalarDescriptor]]
 """declare_scalar declares a scalar type to be used with
 the scalar field option. Scalar names are
 expected to follow the following convention such that their declaration
@@ -153,3 +165,5 @@ can be discovered by tools: for a given scalar type a.b.C, it is
 expected that the declaration will be found in a protobuf file named
 a/b/scalars.proto in the file descriptor set.
 """
+file_added_in: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.FileOptions, _builtins.str]
+"""file_added_in is used to indicate from which the version the file was added."""

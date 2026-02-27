@@ -5,7 +5,18 @@ from pathlib import Path
 # Packages that should not have their imports rewritten
 EXCLUDED_PACKAGES = [
     'google.protobuf',
-    # Add other packages here as needed
+    'collections',
+    'typing',
+    'typing_extensions',
+    'builtins',
+    'abc',
+    'enum',
+    'sys',
+    'os',
+    'io',
+    're',
+    'functools',
+    'itertools',
 ]
 
 def rewrite_imports(file_path: str, package_prefix: str) -> None:
@@ -28,7 +39,7 @@ def rewrite_imports(file_path: str, package_prefix: str) -> None:
 def process_directory(directory: str, package_prefix: str) -> None:
     for root, _, files in os.walk(directory):
         for file in files:
-            if file.endswith('_pb2.py'):
+            if file.endswith('_pb2.py') or file.endswith('_pb2.pyi'):
                 file_path = os.path.join(root, file)
                 print(f"Processing {file_path}")
                 rewrite_imports(file_path, package_prefix)

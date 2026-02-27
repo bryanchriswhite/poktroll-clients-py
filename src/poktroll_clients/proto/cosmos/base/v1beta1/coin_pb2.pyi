@@ -3,57 +3,105 @@
 isort:skip_file
 """
 
-import builtins
-import google.protobuf.descriptor
-import google.protobuf.message
-import typing
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class Coin(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class Coin(_message.Message):
     """Coin defines a token with a denomination and an amount.
 
     NOTE: The amount field is an Int which implements the custom method
     signatures required by gogoproto.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    DENOM_FIELD_NUMBER: builtins.int
-    AMOUNT_FIELD_NUMBER: builtins.int
-    denom: builtins.str
-    amount: builtins.str
+    DENOM_FIELD_NUMBER: _builtins.int
+    AMOUNT_FIELD_NUMBER: _builtins.int
+    denom: _builtins.str
+    amount: _builtins.str
     def __init__(
         self,
         *,
-        denom: builtins.str = ...,
-        amount: builtins.str = ...,
+        denom: _builtins.str = ...,
+        amount: _builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["amount", b"amount", "denom", b"denom"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["amount", b"amount", "denom", b"denom"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___Coin = Coin
+Global___Coin: _TypeAlias = Coin  # noqa: Y015
 
-@typing.final
-class DecCoin(google.protobuf.message.Message):
+@_typing.final
+class DecCoin(_message.Message):
     """DecCoin defines a token with a denomination and a decimal amount.
 
     NOTE: The amount field is an Dec which implements the custom method
     signatures required by gogoproto.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    DENOM_FIELD_NUMBER: builtins.int
-    AMOUNT_FIELD_NUMBER: builtins.int
-    denom: builtins.str
-    amount: builtins.str
+    DENOM_FIELD_NUMBER: _builtins.int
+    AMOUNT_FIELD_NUMBER: _builtins.int
+    denom: _builtins.str
+    amount: _builtins.str
     def __init__(
         self,
         *,
-        denom: builtins.str = ...,
-        amount: builtins.str = ...,
+        denom: _builtins.str = ...,
+        amount: _builtins.str = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["amount", b"amount", "denom", b"denom"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["amount", b"amount", "denom", b"denom"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___DecCoin = DecCoin
+Global___DecCoin: _TypeAlias = DecCoin  # noqa: Y015
+
+@_typing.final
+class IntProto(_message.Message):
+    """IntProto defines a Protobuf wrapper around an Int object.
+    Deprecated: Prefer to use math.Int directly. It supports binary Marshal and Unmarshal.
+    """
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    INT_FIELD_NUMBER: _builtins.int
+    int: _builtins.str
+    def __init__(
+        self,
+        *,
+        int: _builtins.str = ...,
+    ) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["int", b"int"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___IntProto: _TypeAlias = IntProto  # noqa: Y015
+
+@_typing.final
+class DecProto(_message.Message):
+    """DecProto defines a Protobuf wrapper around a Dec object.
+    Deprecated: Prefer to use math.LegacyDec directly. It supports binary Marshal and Unmarshal.
+    """
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    DEC_FIELD_NUMBER: _builtins.int
+    dec: _builtins.str
+    def __init__(
+        self,
+        *,
+        dec: _builtins.str = ...,
+    ) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["dec", b"dec"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___DecProto: _TypeAlias = DecProto  # noqa: Y015
