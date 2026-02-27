@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import List
 
+from cffi import FFIError
+
 from poktroll_clients.ffi import ffi
 
 
@@ -45,14 +47,14 @@ class ProtoMessageArray:
     def to_c_struct(self) -> ffi.CData:
         """
         Converts the Python protobuf message array to a C struct while preserving the underlying memory.
-        Returns a C proto_message_array struct pointer.
+        Returns a C serialized_proto_array struct pointer.
         """
         # Create the array structure
-        proto_message_array = ffi.new("proto_message_array *")
-        proto_message_array.num_messages = len(self.messages)
+        proto_array = ffi.new("serialized_proto_array *")
+        proto_array.num_protos = len(self.messages)
 
         # Allocate the array of message structures
-        proto_message_array.messages = ffi.new("serialized_proto[]", len(self.messages))
+        proto_array.protos = ffi.new("serialized_proto[]", len(self.messages))
 
         # Convert each message and store C structs as instance attributes
         self._message_structs = []
@@ -62,9 +64,34 @@ class ProtoMessageArray:
             self._message_structs.append(c_msg)
 
             # Copy the data to the array
-            proto_message_array.messages[i].type_url = c_msg.type_url
-            proto_message_array.messages[i].type_url_length = c_msg.type_url_length
-            proto_message_array.messages[i].data = c_msg.data
-            proto_message_array.messages[i].data_length = c_msg.data_length
+            proto_array.protos[i].type_url = c_msg.type_url
+            proto_array.protos[i].type_url_length = c_msg.type_url_length
+            proto_array.protos[i].data = c_msg.data
+            proto_array.protos[i].data_length = c_msg.data_length
 
-        return proto_message_array
+        return proto_array
+
+
+def deserialize_proto(raw_ptr, proto_class):
+    """Deserialize a void* (C serialized_proto pointer) into a Python protobuf message."""
+    if raw_ptr == ffi.NULL:
+        raise FFIError("null serialized_proto pointer")
+    c_proto = ffi.cast("serialized_proto *", raw_ptr)
+    data_bytes = bytes(ffi.buffer(c_proto.data, c_proto.data_length))
+    msg = proto_class()
+    msg.ParseFromString(data_bytes)
+    return msg
+
+
+def deserialize_proto_array(raw_ptr, proto_class):
+    """Deserialize a void* (C serialized_proto_array pointer) into a list of Python protobuf messages."""
+    if raw_ptr == ffi.NULL:
+        raise FFIError("null serialized_proto_array pointer")
+    c_array = ffi.cast("serialized_proto_array *", raw_ptr)
+    results = []
+    for i in range(c_array.num_protos):
+        data_bytes = bytes(ffi.buffer(c_array.protos[i].data, c_array.protos[i].data_length))
+        msg = proto_class()
+        msg.ParseFromString(data_bytes)
+        results.append(msg)
+    return results

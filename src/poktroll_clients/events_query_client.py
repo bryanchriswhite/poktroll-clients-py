@@ -1,11 +1,9 @@
 from poktroll_clients.ffi import ffi, libpoktroll_clients
-from poktroll_clients.go_memory import GoManagedMem, go_ref
+from poktroll_clients.go_memory import GoManagedMem, go_ref, check_err, check_ref
 
 
 class EventsQueryClient(GoManagedMem):
-    """
-    TODO_IN_THIS_COMMIT: comment
-    """
+    """Subscribes to CometBFT events via WebSocket."""
 
     go_ref: go_ref
     err_ptr: ffi.CData
@@ -15,4 +13,8 @@ class EventsQueryClient(GoManagedMem):
         super().__init__(go_ref)
 
     def EventsBytes(self, query: str) -> go_ref:
-        return libpoktroll_clients.EventsQueryClientEventsBytes(self.go_ref, query.encode('utf-8'))
+        err_ptr = ffi.new("char **")
+        ref = libpoktroll_clients.EventsQueryClientEventsBytes(self.go_ref, query.encode('utf-8'), err_ptr)
+        check_err(err_ptr)
+        check_ref(ref)
+        return ref

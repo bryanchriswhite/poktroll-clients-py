@@ -9,7 +9,6 @@ from cffi import FFI
 # Initialize CFFI
 ffi = FFI()
 
-# TODO_IN_THIS_COMMIT: comment
 callback_type = Callable[[ffi.CData, ffi.CData], None]
 
 # Load and read the header file contents
@@ -18,19 +17,35 @@ thisDirPath = path.dirname(path.abspath(__file__))
 # TODO_IMPROVE: Extract docstring to an appropriately named file.
 # DEV_NOTE: ffi.cdef MUST NOT depend on any pre-processing (e.g. macros, defs, etc.).
 
-# Add complete struct definitions for CFFI
-ffi.cdef("""
-    typedef struct {
-        unsigned char __size[40];
-        long int __align;
-    } pthread_mutex_t;
+# Determine pthread struct sizes based on platform
+_system = platform.system()
+_machine = platform.machine()
 
-    typedef struct {
-        unsigned char __size[48];
+if _system == "Darwin":
+    _PTHREAD_MUTEX_SIZE = 64
+    _PTHREAD_COND_SIZE = 48
+    _PTHREAD_ALIGN_TYPE = "long int"
+elif _system == "Linux" and _machine == "aarch64":
+    _PTHREAD_MUTEX_SIZE = 48
+    _PTHREAD_COND_SIZE = 48
+    _PTHREAD_ALIGN_TYPE = "long int"
+else:  # Linux x86_64 and others
+    _PTHREAD_MUTEX_SIZE = 40
+    _PTHREAD_COND_SIZE = 48
+    _PTHREAD_ALIGN_TYPE = "long int"
+
+ffi.cdef(f"""
+    typedef struct {{
+        unsigned char __size[{_PTHREAD_MUTEX_SIZE}];
+        {_PTHREAD_ALIGN_TYPE} __align;
+    }} pthread_mutex_t;
+
+    typedef struct {{
+        unsigned char __size[{_PTHREAD_COND_SIZE}];
         long long int __align;
-    } pthread_cond_t;
+    }} pthread_cond_t;
 
-    typedef struct AsyncContext {
+    typedef struct AsyncContext {{
         pthread_mutex_t mutex;
         pthread_cond_t cond;
         bool completed;
@@ -39,18 +54,18 @@ ffi.cdef("""
         size_t data_len;
         int error_code;
         char error_msg[256];
-    } AsyncContext;
+    }} AsyncContext;
 
     typedef void (*success_callback)(AsyncContext* ctx, const void* result);
     typedef void (*error_callback)(AsyncContext* ctx, const char* error);
     typedef void (*cleanup_callback)(AsyncContext* ctx);
 
-    typedef struct AsyncOperation {
+    typedef struct AsyncOperation {{
         AsyncContext* ctx;
         success_callback on_success;
         error_callback on_error;
         cleanup_callback cleanup;
-    } AsyncOperation;
+    }} AsyncOperation;
 
     void init_context(AsyncContext* ctx);
     void cleanup_context(AsyncContext* ctx);
@@ -62,35 +77,99 @@ ffi.cdef("""
 
     typedef int64_t go_ref;
 
-    void FreeGoMem(go_ref go_ref);
+    void FreeGoMem(go_ref ref);
 
-    go_ref Supply(go_ref go_ref, char **err);
-    go_ref SupplyMany(go_ref *go_refs, int num_go_refs, char **err);
+    /* ── depinject ── */
+    go_ref Supply(go_ref goRef, char** cErr);
+    go_ref SupplyMany(go_ref* goRefs, int numGoRefs, char** cErr);
+    go_ref Config(go_ref* goRefs, int numGoRefs, char** cErr);
 
-    typedef struct {
+    /* ── protobuf ── */
+    typedef struct {{
         uint8_t* type_url;
         size_t type_url_length;
         uint8_t* data;
         size_t data_length;
-    } serialized_proto;
+    }} serialized_proto;
 
-    typedef struct {
-        serialized_proto* messages;
-        size_t num_messages;
-    } proto_message_array;
+    typedef struct {{
+        serialized_proto* protos;
+        size_t num_protos;
+    }} serialized_proto_array;
 
-    go_ref NewEventsQueryClient(const char* comet_websocket_url);
-    go_ref EventsQueryClientEventsBytes(go_ref selfRef, const char* query);
+    void* GetGoProtoAsSerializedProto(go_ref ref, char** cErr);
 
-    go_ref NewBlockQueryClient(char *comet_websocket_url, char **err);
+    /* ── gas ── */
+    typedef struct gas_settings {{
+        uint64_t gas_limit;
+        bool simulate;
+        char *gas_prices;
+        double gas_adjustment;
+        char *fees;
+    }} gas_settings;
 
-    go_ref NewTxContext(char *tcp_url, char **err);
+    /* ── morse keys ── */
+    typedef uint8_t morse_signature[64];
 
-    go_ref NewBlockClient(go_ref deps_ref, char **err);
+    /* ── events query client ── */
+    go_ref NewEventsQueryClient(char* cometWebsocketURLCString);
+    go_ref EventsQueryClientEventsBytes(go_ref clientRef, char* query, char** cErr);
 
-    go_ref NewTxClient(go_ref deps_ref, char *signing_key_name, char **err);
-    go_ref TxClient_SignAndBroadcast(AsyncOperation* op, go_ref self_ref, serialized_proto *msg);
-    go_ref TxClient_SignAndBroadcastMany(AsyncOperation* op, go_ref self_ref, proto_message_array *msgs);
+    /* ── block client ── */
+    go_ref NewBlockClient(go_ref depsRef, char** cErr);
+
+    /* ── block query client ── */
+    go_ref NewBlockQueryClient(char* cometWebsocketURL, char** cErr);
+    go_ref BlockQueryClient_Block(go_ref clientRef, int64_t* cHeight, char** cErr);
+
+    /* ── tx context ── */
+    go_ref NewTxContext(char* tcpURL, char** cErr);
+
+    /* ── tx client ── */
+    go_ref NewTxClient(go_ref depsRef, char* signingKeyName, gas_settings* gasSetting, char** cErr);
+    go_ref WithSigningKeyName(char* keyName);
+    go_ref TxClient_SignAndBroadcast(AsyncOperation* op, go_ref txClientRef, serialized_proto* serializedProto);
+    go_ref TxClient_SignAndBroadcastMany(AsyncOperation* op, go_ref txClientRef, serialized_proto_array* serializedProtoArray);
+
+    /* ── query client ── */
+    go_ref NewQueryClient(go_ref depsRef, char* queryNodeRPCURL, char** cErr);
+    void* QueryClient_GetSessionParams(go_ref clientRef, char** cErr);
+    void* QueryClient_GetProofParams(go_ref clientRef, char** cErr);
+    void* QueryClient_GetMigrationParams(go_ref clientRef, char** cErr);
+    void* QueryClient_GetMorseClaimableAccounts(go_ref clientRef, char** cErr);
+    void* QueryClient_GetMorseClaimableAccount(go_ref clientRef, char* cMorseSrcAddress, char** cErr);
+
+    /* ── app query client ── */
+    void* QueryClient_GetApplication(go_ref clientRef, char* appAddress, char** cErr);
+    void* QueryClient_GetAllApplications(go_ref clientRef, char** cErr);
+
+    /* ── service query client ── */
+    void* QueryClient_GetService(go_ref clientRef, char* serviceId, char** cErr);
+    void* QueryClient_GetServiceRelayDifficulty(go_ref clientRef, char* serviceId, char** cErr);
+
+    /* ── session query client ── */
+    void* QueryClient_GetSession(go_ref clientRef, char* appAddress, char* serviceId, int64_t blockHeight, char** cErr);
+
+    /* ── shared query client ── */
+    void* QueryClient_GetSharedParams(go_ref depsRef, char** cErr);
+    int64_t QueryClient_GetSessionGracePeriodEndHeight(go_ref depsRef, int64_t queryHeight, char** cErr);
+    int64_t QueryClient_GetClaimWindowOpenHeight(go_ref depsRef, int64_t queryHeight, char** cErr);
+    int64_t QueryClient_GetEarliestSupplierClaimCommitHeight(go_ref clientRef, int64_t queryHeight, char* supplierOperatorAddr, char** cErr);
+    int64_t QueryClient_GetProofWindowOpenHeight(go_ref clientRef, int64_t queryHeight, char** cErr);
+    int64_t QueryClient_GetEarliestSupplierProofCommitHeight(go_ref clientRef, int64_t queryHeight, char* supplierOperatorAddr, char** cErr);
+    uint64_t QueryClient_GetComputeUnitsToTokensMultiplier(go_ref clientRef, char** cErr);
+
+    /* ── supplier query client ── */
+    void* QueryClient_GetSupplier(go_ref clientRef, char* supplierAddress, char** cErr);
+    void* QueryClient_GetAllSuppliers(go_ref clientRef, char** cErr);
+
+    /* ── morse claim messages ── */
+    go_ref LoadMorsePrivateKey(char* morseKeyExportPath, char* passphrase, char** cErr);
+    void* NewSerializedSignedMsgClaimMorseAccount(char* cShannonDestAddr, go_ref privKeyRef, char* cShannonSigningAddr, char** cErr);
+    void* NewSerializedSignedMsgClaimMorseApplication(char* cShannonDestAddr, go_ref privKeyRef, char* serviceId, char* cShannonSigningAddr, char** cErr);
+    void* NewSerializedSignedMsgClaimMorseSupplier(char* cShannonOwnerAddr, char* cShannonOperatorAddr, go_ref privKeyRef, serialized_proto_array* cSupplierServiceConfigs, char* cShannonSigningAddr, char** cErr);
+    char* GetMorseAddress(go_ref privKeyRef, char** cErr);
+    void SignMorseClaimMsg(serialized_proto* cSerializedProto, go_ref privKeyRef, uint8_t* cOutMorseSignature, char** cErr);
 """)
 
 
@@ -125,9 +204,7 @@ def get_platform_info() -> Tuple[str, str]:
 
 
 def machine_to_go_arch(machine: str) -> str:
-    """
-    TODO_IN_THIS_COMMIT: move and comment...
-    """
+    """Map platform.machine() values to Go architecture names."""
 
     arch_map = {
         "x86_64": "amd64",
@@ -190,9 +267,10 @@ def get_packaged_library_path() -> Path:
 
 
 lib_dir = path.join(path.dirname(path.abspath(__file__)), "lib")
-if platform == "darwin":
+_platform_system = platform.system()
+if _platform_system == "Darwin":
     lib_path_var = "DYLD_LIBRARY_PATH"
-elif platform == "win32":
+elif _platform_system == "Windows":
     lib_path_var = "PATH"
 else:
     lib_path_var = "LD_LIBRARY_PATH"

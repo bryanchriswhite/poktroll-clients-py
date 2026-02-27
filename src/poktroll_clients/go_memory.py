@@ -8,12 +8,8 @@ go_ref = int
 callback_type = Callable[[ffi.CData, ffi.CData], None]
 
 
-# TODO_IN_THIS_COMMIT: switch to an err_msg[] array
-
 def check_err(err_ptr: ffi.CData):
-    """
-    TODO_IN_THIS_COMMIT: comment...
-    """
+    """Check the FFI error pointer and raise FFIError if an error occurred."""
     if err_ptr[0] != ffi.NULL:
         raise FFIError(ffi.string(err_ptr[0]))
 

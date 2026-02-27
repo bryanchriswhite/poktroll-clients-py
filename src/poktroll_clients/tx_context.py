@@ -3,9 +3,7 @@ from poktroll_clients.go_memory import GoManagedMem, go_ref
 
 
 class TxContext(GoManagedMem):
-    """
-    TODO_IN_THIS_COMMIT: comment
-    """
+    """Provides transaction signing context for a CometBFT node."""
 
     go_ref: go_ref
     err_ptr: ffi.CData
