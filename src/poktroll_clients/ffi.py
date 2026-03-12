@@ -170,6 +170,7 @@ ffi.cdef(f"""
     /* ── ring client ── */
     go_ref NewRingClient(go_ref queryClientRef, char** cErr);
     void RingClient_SignRelayRequest(go_ref ringClientRef, uint8_t* cPrivKeyBz, size_t cPrivKeyBzLen, uint8_t* cRelayRequestBz, size_t cRelayRequestBzLen, uint8_t** cOutSigBz, size_t* cOutSigBzLen, char** cErr);
+    void FreeCBytes(uint8_t* cBz);
 """)
 
 

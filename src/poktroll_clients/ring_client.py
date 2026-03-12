@@ -55,10 +55,7 @@ class RingClient(GoManagedMem):
         if sig_len == 0 or out_sig_bz[0] == ffi.NULL:
             raise ValueError("RingClient_SignRelayRequest returned empty signature")
 
-        # Copy from C-allocated memory to Python bytes.
-        # NOTE: The C memory (allocated via C.malloc in Go) is not freed here.
-        # This is a small leak per signing operation. A proper fix would add a
-        # FreeCBytes CGo export or use Go-managed memory instead of C.malloc.
-        # Acceptable for the prototype; tracked for Path B cleanup.
+        # Copy from C-allocated memory to Python bytes, then free the C allocation.
         signature = bytes(ffi.buffer(out_sig_bz[0], sig_len))
+        libpoktroll_clients.FreeCBytes(out_sig_bz[0])
         return signature
