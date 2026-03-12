@@ -8,6 +8,7 @@ from .query_client import QueryClient
 from .depinject import Supply, SupplyMany, Config
 from .go_memory import go_ref
 from .morse_key_manager import MorseKeyManager
+from .ring_client import RingClient
 
 __all__ = [
     'BlockClient',
@@ -20,4 +21,5 @@ __all__ = [
     'Config',
     'go_ref',
     'MorseKeyManager',
+    'RingClient',
 ]

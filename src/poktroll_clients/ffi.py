@@ -166,6 +166,10 @@ ffi.cdef(f"""
     void* NewSerializedSignedMsgClaimMorseSupplier(char* cShannonOwnerAddr, char* cShannonOperatorAddr, char* cMorseNodeAddr, go_ref privKeyRef, serialized_proto_array* cSupplierServiceConfigs, char* cShannonSigningAddr, char** cErr);
     char* GetMorseAddress(go_ref privKeyRef, char** cErr);
     void SignMorseClaimMsg(serialized_proto* cSerializedProto, go_ref privKeyRef, uint8_t* cOutMorseSignature, char** cErr);
+
+    /* ── ring client ── */
+    go_ref NewRingClient(go_ref queryClientRef, char** cErr);
+    void RingClient_SignRelayRequest(go_ref ringClientRef, uint8_t* cPrivKeyBz, size_t cPrivKeyBzLen, uint8_t* cRelayRequestBz, size_t cRelayRequestBzLen, uint8_t** cOutSigBz, size_t* cOutSigBzLen, char** cErr);
 """)
 
 
